@@ -1,1 +1,206 @@
+#include <iostream> //standard library for i/o
+#include <string> // always include this when you use the string class
+#include <ctime> //random number generator
+using namespace std;
 
+//do not use the vegetable class
+class car
+{
+public:
+//default constructor
+    car();
+//explicit value constructor
+    explicit car(string brand, string model, double price, int year, int id);
+//mutator functions
+    void SetBrand(string);
+    void SetModel(string);
+    void SetPrice(double);
+    void SetYear(int);
+    void SetID(int);
+    
+//accessor functions
+    string GetBrand() const;
+    string GetModel() const;
+    double GetPrice() const;
+    int GetYear() const;
+    int GetID() const;
+
+//member function example
+    void CalculatePurchase();
+
+    friend double operator + (const car& car2, const car& car3);
+    friend bool operator < (const car& car1, const car& car2);
+private:
+    string brand;
+    string model;
+    double price;
+    int year;
+    int id;
+//private member variables
+};
+//default constructor
+car::car()
+{
+    cout << "\nDefault car is:";
+    model = "Elantra";
+    brand = "Hyundai";
+    price = 25460.43;
+    year = 2023;
+    id = 1;
+}
+//explicit value constructor
+car::car(string m, string b, double p, int y, int i)
+{
+    model = m;
+    brand = b;
+    price = p;
+    year = y;
+    id = i;
+}
+
+//mutator function defintions
+void car::SetBrand(string b){
+    brand = b;
+}
+void car::SetModel(string m){
+    model = m;
+}
+void car::SetPrice(double p){
+    price = p;
+}
+void car::SetYear(int y){
+    year = y;
+}
+void car::SetID(int i){
+    id = i;
+}
+    
+//accessor function defintions
+string car::GetBrand() const{
+    return brand;
+}
+string car::GetModel() const{
+    return model;
+}
+double car::GetPrice() const{
+    return price;
+}
+int car::GetYear() const{
+    return year;
+}
+
+int car::GetID() const{
+    return id;
+}
+
+//member function
+void car::CalculatePurchase() {
+    int quantity;
+    double taxRate = 0.06;
+    double taxAmount, total;
+
+    cout << "\nWould you like to purchase this car?" << endl;
+    cout << "Model: " << model << " | Brand: " << brand << endl;
+    cout << "Price per car: $" << price << endl;
+
+    cout << "How many would you like to buy? ";
+    cin >> quantity;
+
+    if (quantity <= 0) {
+        cout << "No cars purchased.\n";
+        return;
+    }
+
+    taxAmount = price * taxRate * quantity;
+    total = (price * quantity) + taxAmount;
+
+    cout << fixed;
+    cout.precision(2);
+
+    cout << "\nSubtotal: $" << price * quantity;
+    cout << "\nSales Tax (6%): $" << taxAmount;
+    cout << "\nTotal Cost: $" << total << "\n";
+}
+
+void DisplayCarChoices(car& c1, car& c2, car& c3) {
+    int choice;
+
+    do {
+        cout << "\nWhich car would you like to buy?" << endl;
+        cout << "1. Elantra" << endl;
+        cout << "2. F-150" << endl;
+        cout << "3. Accord" << endl;
+        cout << "4. Exit Program" << endl;
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            c1.CalculatePurchase();
+        }
+        else if (choice == 2) {
+            c2.CalculatePurchase();
+        }
+        else if (choice == 3) {
+            c3.CalculatePurchase();
+        }
+        else if (choice != 4) {
+            cout << "Invalid choice. Please try again.\n";
+        }
+    } while (choice != 4);
+}
+
+void PrintCarInfo(const car& car);
+void DisplayCarChoices(car& c1, car& c2, car& c3);
+int main()
+{
+    car car1;
+    car car2("Ford", "F-150", 45540.42, 2022, 2);
+    car car3("Honda", "Accord", 12105.53, 2014, 3);
+    PrintCarInfo(car1);
+    PrintCarInfo(car2);
+    PrintCarInfo(car3);
+    
+
+//Operator overload in use
+    double avgprice = car2 + car3;
+    cout << "\n\nThe average price of Car 2 and Car 3 is " << avgprice;
+//Relational operator overload in use
+    if(car1 < car2){
+        cout << "\n\nCar 1 is cheaper than Car 2.\n";
+    } else {
+        cout << "\nCar 2 is cheaper than Car 1.\n";
+    }
+    DisplayCarChoices(car1, car2, car3);
+
+cout << "\nThank you, have a great day!\n\n";
+return 0;
+}
+//friend function
+bool operator < (const car& car1, const car& car2)
+{
+    return car1.price < car2.price;
+}
+//second friend function
+double operator + (const car& car2, const car& car3)
+{
+    return (car2.price + car3.price)/2;
+}
+
+void PrintCarInfo(const car& car)
+{
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2); //use any number here for the number of decimal places
+    cout << "\n\n------Printing Car info-----\n\n";
+    cout << "ID : " << car.GetID() << endl;
+    cout << "Car Brand: " << car.GetBrand() << endl;
+    cout << "Car Model: " << car.GetModel() << endl;
+    cout << "Car Price: $" << car.GetPrice() << endl;
+    cout << "Car Year: " << car.GetYear() << endl;
+}
+
+//Get rid of calculating the average and if car 1 is cheaper than car2.
+//Make a menu function which acts as cars on the lot where you can add delete display
+//Then based off the cars on the lot allow yourself to buy or calculate the cost of the car with tax
+//Also make a section where it lists warranties available to add on to the total cost
+//Think of other things to do aswell.
